@@ -8,7 +8,13 @@ using UnityEngine.AI;
 public class Mover : MonoBehaviour
 {
     [SerializeField, HideInInspector] private NavMeshAgent _navMeshAgent = default;
-    [SerializeField] private Transform _destinationTarget = default;
+
+    private Camera _mainCamera = default;
+
+    private void Start()
+    {
+        _mainCamera = Camera.main;
+    }
 
     private void OnValidate()
     {
@@ -17,6 +23,18 @@ public class Mover : MonoBehaviour
 
     private void Update()
     {
-       _navMeshAgent.destination = _destinationTarget.position; 
+        if (Input.GetMouseButtonDown(0))
+        {
+            MoveToCursor(); 
+        }
+    }
+
+    private void MoveToCursor()
+    {
+        var ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out var hit))
+        {
+            _navMeshAgent.destination = hit.point;
+        }
     }
 }
