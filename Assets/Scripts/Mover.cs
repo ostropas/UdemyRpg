@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+[RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(NavMeshAgent))]
 public class Mover : MonoBehaviour
 {
     [SerializeField, HideInInspector] private NavMeshAgent _navMeshAgent = default;
+    [SerializeField, HideInInspector] private Animator _animator = default;
 
     private Camera _mainCamera = default;
 
@@ -19,6 +21,7 @@ public class Mover : MonoBehaviour
     private void OnValidate()
     {
         _navMeshAgent = GetComponent<NavMeshAgent>();
+        _animator = GetComponent<Animator>();
     }
 
     private void Update()
@@ -27,6 +30,12 @@ public class Mover : MonoBehaviour
         {
             MoveToCursor(); 
         }
+    }
+
+    private void LateUpdate()
+    {
+        var localVelocity = transform.InverseTransformDirection(_navMeshAgent.velocity);
+       _animator.SetFloat("forwardSpeed", localVelocity.z); 
     }
 
     private void MoveToCursor()
