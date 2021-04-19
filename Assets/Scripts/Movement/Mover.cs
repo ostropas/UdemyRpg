@@ -26,14 +26,10 @@ public class Mover : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButton(0))
         {
             MoveToCursor(); 
         }
-    }
-
-    private void LateUpdate()
-    {
         var localVelocity = transform.InverseTransformDirection(_navMeshAgent.velocity);
        _animator.SetFloat("forwardSpeed", localVelocity.z); 
     }
